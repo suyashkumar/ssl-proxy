@@ -13,3 +13,14 @@ I know `nginx` is often used for stuff like this, but I got tired of dealing wit
 ssl-proxy -cert cert.pem -key myKey.pem -from 0.0.0.0:4430 -to 127.0.0.1:8000
 ```
 You can provide your own existing certs, of course. Jenkins still has issues serving the fullchain certs from letsencrypt properly, so this tool has come in handy for me there. 
+
+## Installation
+Simply download and uncompress the proper prebuilt binary for your system from the [releases tab](https://github.com/suyashkumar/ssl-proxy/releases/). Then, add the binary to your path or start using it locally (`./ssl-proxy`).
+
+If you're using `wget`, you can fetch and uncompress the proper binary in one command:
+```sh
+wget -qO- $BINARY_RELEASE_LINK | tar xvz
+```
+
+### Build from source
+You must have Golang installed on your system along with `make`. Then simply clone the repository and run `make`.
