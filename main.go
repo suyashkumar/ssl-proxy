@@ -9,6 +9,8 @@ import (
 	"os"
 	"time"
 
+	"strings"
+
 	"github.com/suyashkumar/ssl-proxy/gen"
 )
 
@@ -22,6 +24,8 @@ var (
 const (
 	DefaultCertFile = "cert.pem"
 	DefaultKeyFile  = "key.pem"
+	HTTPSPrefix     = "https://"
+	HTTPPrefix      = "http://"
 )
 
 func main() {
@@ -35,7 +39,7 @@ func main() {
 		log.Printf("No existing cert or key specified, generating some self-signed certs for use (%s, %s)\n", *certFile, *keyFile)
 
 		// Generate new keys
-		certBuf, keyBuf, err := gen.Keys(365 * 24 * time.Hour)
+		certBuf, keyBuf, fingerprint, err := gen.Keys(365 * 24 * time.Hour)
 		if err != nil {
 			log.Fatal("Error generating default keys", err)
 		}
@@ -52,6 +56,14 @@ func main() {
 		}
 		keyOut.Write(keyBuf.Bytes())
 
+		log.Printf("SHA256 Fingerprint: % X", fingerprint)
+
+	}
+
+	// Ensure the to URL is in the right form
+	if !strings.HasPrefix(*to, HTTPPrefix) && !strings.HasPrefix(*to, HTTPSPrefix) {
+		*to = HTTPPrefix + *to
+		log.Println("Assuming -to URL is using http://")
 	}
 
 	toURL, err := url.Parse(*to)
@@ -61,6 +73,6 @@ func main() {
 
 	localProxy := httputil.NewSingleHostReverseProxy(toURL)
 	http.Handle("/", localProxy)
-	log.Printf("Proxying calls from %s (SSL/TLS) to %s", *fromURL, toURL)
+	log.Printf("Proxying calls from https://%s (SSL/TLS) to %s", *fromURL, toURL)
 	log.Fatal(http.ListenAndServeTLS(*fromURL, *certFile, *keyFile, nil))
 }
