@@ -1,4 +1,6 @@
 # ssl-proxy
+[![Go Report Card](https://goreportcard.com/badge/github.com/suyashkumar/ssl-proxy)](https://goreportcard.com/report/github.com/suyashkumar/ssl-proxy) [![GoDoc](https://godoc.org/github.com/suyashkumar/ssl-proxy?status.svg)](https://godoc.org/github.com/suyashkumar/ssl-proxy)
+
 A simple Golang SSL reverse proxy that serves traffic over HTTPS and proxies it to any other web server you might be running. `ssl-proxy` will auto-generate self-signed certificates for you if none are provided to it (useful for things like `jupyter` notebooks in a pinch). Usage is simple:
 ## Usage
 ```sh
