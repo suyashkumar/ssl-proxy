@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/suyashkumar/ssl-proxy/gen"
+	"golang.org/x/crypto/acme/autocert"
 )
 
 var (
@@ -19,6 +20,7 @@ var (
 	fromURL  = flag.String("from", "127.0.0.1:4430", "the tcp address and port this proxy should listen for requests on")
 	certFile = flag.String("cert", "", "path to a tls certificate file. If not provided, ssl-proxy will generate one for you in ~/.ssl-proxy/")
 	keyFile  = flag.String("key", "", "path to a private key file. If not provided, ssl-proxy will generate one for you in ~/.ssl-proxy/")
+	domain = flag.String("domain", "", "domain to mint letsencrypt certificates for. Usage of this parameter implies acceptance of the LetsEncrypt terms of service.")
 )
 
 const (
@@ -71,8 +73,17 @@ func main() {
 		log.Fatal("Unable to parse 'to' url: ", err)
 	}
 
+	// Setup ServeMux
 	localProxy := httputil.NewSingleHostReverseProxy(toURL)
-	http.Handle("/", localProxy)
-	log.Printf("Proxying calls from https://%s (SSL/TLS) to %s", *fromURL, toURL)
-	log.Fatal(http.ListenAndServeTLS(*fromURL, *certFile, *keyFile, nil))
+	mux := http.NewServeMux()
+	mux.Handle("/", localProxy)
+
+	if *domain != "" {
+		// Domain is present, use autocert
+		// TODO: validate domain (though, autocert may do this)
+		log.Fatal(http.Serve(autocert.NewListener(*domain), mux))
+	} else {
+		log.Printf("Proxying calls from https://%s (SSL/TLS) to %s", *fromURL, toURL)
+		log.Fatal(http.ListenAndServeTLS(*fromURL, *certFile, *keyFile, mux))
+	}
 }
