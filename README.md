@@ -1,5 +1,12 @@
-# ssl-proxy
-[![Go Report Card](https://goreportcard.com/badge/github.com/suyashkumar/ssl-proxy)](https://goreportcard.com/report/github.com/suyashkumar/ssl-proxy) [![GoDoc](https://godoc.org/github.com/suyashkumar/ssl-proxy?status.svg)](https://godoc.org/github.com/suyashkumar/ssl-proxy)
+<p align="center">
+  <img src="https://avatars2.githubusercontent.com/in/5534?s=128&v=4" width="64">
+  <h3 align="center">ssl-proxy</h3>
+  <p align="center">A simple SSL reverse proxy to proxy SSL traffic to a non-SSL server with automatically generated certificates<p>
+  <p align="center"><a href="https://goreportcard.com/report/github.com/suyashkumar/ssl-proxy"><img src="https://goreportcard.com/report/github.com/suyashkumar/ssl-proxy" alt=""></a> 
+    <a href="https://godoc.org/github.com/suyashkumar/ssl-proxy"><img src="https://godoc.org/github.com/suyashkumar/ssl-proxy?status.svg" alt=""></a> 
+  </p>
+</p>
+
 
 A simple single-binary SSL reverse proxy that automatically serves traffic over HTTPS and proxies it to any non-HTTPS server running on another port. `ssl-proxy` will auto-generate valid SSL certificates for your domain (from LetsEncrypt) if none are provided to it, and can also auto-generate self-signed certificates on the fly if needed for private use cases (useful for things like `jupyter` notebooks on a VM). Usage is always a simple one-liner of the form:
 ```sh
