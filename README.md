@@ -6,25 +6,22 @@
   </p>
 </p>
 
-
-A simple single-binary SSL reverse proxy that automatically serves traffic over HTTPS and proxies it to any non-HTTPS server running on another port. `ssl-proxy` will auto-generate valid SSL certificates for your domain (from LetsEncrypt) if none are provided to it, and can also auto-generate self-signed certificates on the fly if needed for private use cases (useful for things like `jupyter` notebooks on a VM). Usage is always a simple one-liner of the form:
-```sh
-ssl-proxy -from 0.0.0.0:4430 -to 127.0.0.1:8000
-```
-or
-```sh
-ssl-proxy -from 0.0.0.0:4430 -to 127.0.0.1:8000 -domain=mydomain.com
-```
-If you want to generate and serve real SSL certificates for `mydomain.com`
+A handy and simple way to add SSL to your thing--be it your personal jupyter notebook or your team jenkins instance. `ssl-proxy` autogenerates SSL certs and proxies HTTPS traffic to an existing HTTP server in a single command. 
 
 ## Usage
-### Auto-generate and serve self-signed certificates
+### With auto self-signed certificates
 ```sh
 ssl-proxy -from 0.0.0.0:4430 -to 127.0.0.1:8000
 ```
 This will immediately generate self-signed certificates and being proxying HTTPS traffic from https://0.0.0.0:4430 to http://127.0.0.1:8000. No need to ever call openssl. It will print the SHA256 fingerprint of the cert being used for you to perform manual certificate verification in the browser if you would like (before you "trust" the cert).
 
 I know `nginx` is often used for stuff like this, but I got tired of dealing with the boilerplate and wanted to explore something fun. So I ended up throwing this together. 
+
+### With auto LetsEncrypt SSL certificates
+```sh
+ssl-proxy -from 0.0.0.0:443 -to 127.0.0.1:8000 -domain=mydomain.com
+```
+This will immediately generate, fetch, and serve real LetsEncrypt certificates for `mydomain.com` and being proxying HTTPS traffic from https://0.0.0.0:443 to http://127.0.0.1:8000. For now, you need to ensure that `ssl-proxy` can bind port `:443` and that `mydomain.com` routes to the server running `ssl-proxy` (as you may have expected, this is not the tool you should be using if you have load-balancing over multiple servers or other deployment configurations).
 
 ### Provide your own certs
 ```sh
