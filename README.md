@@ -6,7 +6,7 @@
   </p>
 </p>
 
-A handy and simple way to add SSL to your thing--be it your personal jupyter notebook or your team jenkins instance. `ssl-proxy` autogenerates SSL certs and proxies HTTPS traffic to an existing HTTP server in a single command. 
+A handy and simple way to add SSL to your thing running on a VM--be it your personal jupyter notebook or your team jenkins instance. `ssl-proxy` autogenerates SSL certs and proxies HTTPS traffic to an existing HTTP server in a single command. 
 
 ## Usage
 ### With auto self-signed certificates
