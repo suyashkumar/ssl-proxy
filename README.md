@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/suyashkumar/website/raw/master/assets/img/lock.png" width="64">
+  <img src="https://suyashkumar.com/assets/img/lock.png" width="64">
   <h3 align="center">ssl-proxy</h3>
   <p align="center">A simple SSL reverse proxy to proxy SSL traffic to a non-SSL server with automatically generated certificates<p>
   <p align="center"><a href="https://goreportcard.com/report/github.com/suyashkumar/ssl-proxy"><img src="https://goreportcard.com/report/github.com/suyashkumar/ssl-proxy" alt=""></a> 
