@@ -1,7 +1,7 @@
 language: go
-go:
-    - "1.9.3"
-    - master
+go: 
+    - "1.10.x"
+    - "1.11.x"
 install:
     - go get -u github.com/golang/dep/cmd/dep 
 script:
