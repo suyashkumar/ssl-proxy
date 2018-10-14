@@ -21,7 +21,6 @@ func Build(toURL *url.URL) *httputil.ReverseProxy {
 
 // newDirector creates a base director that should be exactly what http.NewSingleHostReverseProxy() creates, but allows
 // for the caller to supply and extraDirector function to decorate to request to the downstream server
-// TODO: add test to ensure behavior does not diverge from httputil's implementation, as per Rob Pike's proverbs
 func newDirector(target *url.URL, extraDirector func(*http.Request)) func(*http.Request) {
 	targetQuery := target.RawQuery
 	return func(req *http.Request) {
