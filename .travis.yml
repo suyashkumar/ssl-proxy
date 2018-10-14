@@ -1,0 +1,9 @@
+language: go
+go:
+    - "1.9.3"
+    - master
+install:
+    - dep ensure
+script:
+    - make
+    - make test
