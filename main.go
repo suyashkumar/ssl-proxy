@@ -4,7 +4,6 @@ import (
 	"flag"
 	"log"
 	"net/http"
-	"net/http/httputil"
 	"net/url"
 	"os"
 	"time"
@@ -12,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/suyashkumar/ssl-proxy/gen"
+	"github.com/suyashkumar/ssl-proxy/reverseproxy"
 	"golang.org/x/crypto/acme/autocert"
 )
 
@@ -79,10 +79,10 @@ func main() {
 		log.Fatal("Unable to parse 'to' url: ", err)
 	}
 
-	// Setup ServeMux
-	localProxy := httputil.NewSingleHostReverseProxy(toURL)
+	// Setup reverse proxy ServeMux
+	p := reverseproxy.Build(toURL)
 	mux := http.NewServeMux()
-	mux.Handle("/", localProxy)
+	mux.Handle("/", p)
 
 	log.Printf("Proxying calls from https://%s (SSL/TLS) to %s", *fromURL, toURL)
 
