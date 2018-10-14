@@ -4,7 +4,6 @@ import (
 	"flag"
 	"log"
 	"net/http"
-	"net/http/httputil"
 	"net/url"
 	"os"
 	"time"
@@ -12,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/suyashkumar/ssl-proxy/gen"
+	"github.com/suyashkumar/ssl-proxy/reverseproxy"
 	"golang.org/x/crypto/acme/autocert"
 )
 
@@ -80,15 +80,9 @@ func main() {
 	}
 
 	// Setup reverse proxy ServeMux
-	localProxy := &httputil.ReverseProxy{}
-	addProxyHeaders := func(req *http.Request) {
-		req.Header.Set(http.CanonicalHeaderKey("X-Forwarded-Proto"), "https")
-		req.Header.Set(http.CanonicalHeaderKey("X-Forwarded-Port"), "443")
-	}
-	localProxy.Director = newDirector(toURL, addProxyHeaders)
-
+	p := reverseproxy.Build(toURL)
 	mux := http.NewServeMux()
-	mux.Handle("/", localProxy)
+	mux.Handle("/", p)
 
 	log.Printf("Proxying calls from https://%s (SSL/TLS) to %s", *fromURL, toURL)
 
@@ -115,44 +109,4 @@ func main() {
 	} else {
 		log.Fatal(http.ListenAndServeTLS(*fromURL, *certFile, *keyFile, mux))
 	}
-}
-
-// newDirector creates a base director that should be exactly what http.NewSingleHostReverseProxy() creates, but allows
-// for the caller to supply and extraDirector function to decorate to request to the downstream server
-// TODO: add test to ensure behavior does not diverge from httputil's implementation, as per Rob Pike's proverbs
-func newDirector(target *url.URL, extraDirector func(*http.Request)) func(*http.Request) {
-	targetQuery := target.RawQuery
-	return func(req *http.Request) {
-		req.URL.Scheme = target.Scheme
-		req.URL.Host = target.Host
-		req.URL.Path = singleJoiningSlash(target.Path, req.URL.Path)
-		if targetQuery == "" || req.URL.RawQuery == "" {
-			req.URL.RawQuery = targetQuery + req.URL.RawQuery
-		} else {
-			req.URL.RawQuery = targetQuery + "&" + req.URL.RawQuery
-		}
-		if _, ok := req.Header["User-Agent"]; !ok {
-			// explicitly disable User-Agent so it's not set to default value
-			req.Header.Set("User-Agent", "")
-		}
-
-		if extraDirector != nil {
-			extraDirector(req)
-		}
-	}
-}
-
-// singleJoiningSlash is a utility function that adds a single slash to a URL where appropriate, copied from
-// the httputil package
-// TODO: add test to ensure behavior does not diverge from httputil's implementation, as per Rob Pike's proverbs
-func singleJoiningSlash(a, b string) string {
-	aslash := strings.HasSuffix(a, "/")
-	bslash := strings.HasPrefix(b, "/")
-	switch {
-	case aslash && bslash:
-		return a + b[1:]
-	case !aslash && !bslash:
-		return a + "/" + b
-	}
-	return a + b
 }
