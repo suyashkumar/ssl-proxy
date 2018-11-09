@@ -105,8 +105,10 @@ func main() {
 			TLSConfig: m.TLSConfig(),
 		}
 		s.Handler = mux
-		s.ListenAndServeTLS("", "")
-	} else {
-		log.Fatal(http.ListenAndServeTLS(*fromURL, *certFile, *keyFile, mux))
+		log.Fatal(s.ListenAndServeTLS("", ""))
 	}
+
+	// Domain is not provided, serve using provided/generated certificate files
+	log.Fatal(http.ListenAndServeTLS(*fromURL, *certFile, *keyFile, mux))
+
 }
