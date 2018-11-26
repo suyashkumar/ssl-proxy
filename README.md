@@ -13,7 +13,7 @@ A handy and simple way to add SSL to your thing running on a VM--be it your pers
 ```sh
 ssl-proxy -from 0.0.0.0:4430 -to 127.0.0.1:8000
 ```
-This will immediately generate self-signed certificates and being proxying HTTPS traffic from https://0.0.0.0:4430 to http://127.0.0.1:8000. No need to ever call openssl. It will print the SHA256 fingerprint of the cert being used for you to perform manual certificate verification in the browser if you would like (before you "trust" the cert).
+This will immediately generate self-signed certificates and begin proxying HTTPS traffic from https://0.0.0.0:4430 to http://127.0.0.1:8000. No need to ever call openssl. It will print the SHA256 fingerprint of the cert being used for you to perform manual certificate verification in the browser if you would like (before you "trust" the cert).
 
 I know `nginx` is often used for stuff like this, but I got tired of dealing with the boilerplate and wanted to explore something fun. So I ended up throwing this together. 
 
@@ -21,7 +21,7 @@ I know `nginx` is often used for stuff like this, but I got tired of dealing wit
 ```sh
 ssl-proxy -from 0.0.0.0:443 -to 127.0.0.1:8000 -domain=mydomain.com
 ```
-This will immediately generate, fetch, and serve real LetsEncrypt certificates for `mydomain.com` and being proxying HTTPS traffic from https://0.0.0.0:443 to http://127.0.0.1:8000. For now, you need to ensure that `ssl-proxy` can bind port `:443` and that `mydomain.com` routes to the server running `ssl-proxy` (as you may have expected, this is not the tool you should be using if you have load-balancing over multiple servers or other deployment configurations).
+This will immediately generate, fetch, and serve real LetsEncrypt certificates for `mydomain.com` and begin proxying HTTPS traffic from https://0.0.0.0:443 to http://127.0.0.1:8000. For now, you need to ensure that `ssl-proxy` can bind port `:443` and that `mydomain.com` routes to the server running `ssl-proxy` (as you may have expected, this is not the tool you should be using if you have load-balancing over multiple servers or other deployment configurations).
 
 ### Provide your own certs
 ```sh
