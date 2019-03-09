@@ -1,0 +1,7 @@
+version: '2'
+services:
+  build-release:
+    build: .
+    volumes:
+      - $PWD/build:/go/src/github.com/suyashkumar/ssl-proxy/build
+    command: make release
