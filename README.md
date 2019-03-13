@@ -29,13 +29,22 @@ ssl-proxy -cert cert.pem -key myKey.pem -from 0.0.0.0:4430 -to 127.0.0.1:8000
 ```
 You can provide your own existing certs, of course. Jenkins still has issues serving the fullchain certs from letsencrypt properly, so this tool has come in handy for me there. 
 
+### Redirect HTTP -> HTTPS
+Simply include the `-redirectHTTP` flag when running the program.
+
 ## Installation
 Simply download and uncompress the proper prebuilt binary for your system from the [releases tab](https://github.com/suyashkumar/ssl-proxy/releases/). Then, add the binary to your path or start using it locally (`./ssl-proxy`).
 
-If you're using `wget`, you can fetch and uncompress the proper binary in one command:
+If you're using `wget`, you can fetch and uncompress the right binary for your OS using [`bin.suyash.io`](https://github.com/suyashkumar/bin) as follows:
 ```sh
-wget -qO- $BINARY_RELEASE_LINK | tar xvz
+wget -qO- "https://bin.suyash.io/suyashkumar/ssl-proxy" | tar xvz 
 ```
+or with `curl` (note you need to provide your os if using curl as one of `(darwin, windows, linux)` below):
+```sh
+curl -LJ "https://bin.suyash.io/suyashkumar/ssl-proxy?os=linux" | tar xvz 
+```
+
+Shameless plug: [`suyashkumar/bin (bin.suyash.io)`](https://github.com/suyashkumar/bin) is a general tool that can fetch the latest binaries from GitHub releases for your OS. Check it out :).  
 
 ### Build from source 
 #### Build from source using Docker
