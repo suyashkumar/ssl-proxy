@@ -35,16 +35,16 @@ Simply include the `-redirectHTTP` flag when running the program.
 ## Installation
 Simply download and uncompress the proper prebuilt binary for your system from the [releases tab](https://github.com/suyashkumar/ssl-proxy/releases/). Then, add the binary to your path or start using it locally (`./ssl-proxy`).
 
-If you're using `wget`, you can fetch and uncompress the right binary for your OS using [`bin.suyash.io`](https://github.com/suyashkumar/bin) as follows:
+If you're using `wget`, you can fetch and uncompress the right binary for your OS using [`getbin.io`](https://github.com/suyashkumar/getbin) as follows:
 ```sh
-wget -qO- "https://bin.suyash.io/suyashkumar/ssl-proxy" | tar xvz 
+wget -qO- "https://getbin.io/suyashkumar/ssl-proxy" | tar xvz 
 ```
 or with `curl` (note you need to provide your os if using curl as one of `(darwin, windows, linux)` below):
 ```sh
-curl -LJ "https://bin.suyash.io/suyashkumar/ssl-proxy?os=linux" | tar xvz 
+curl -LJ "https://getbin.io/suyashkumar/ssl-proxy?os=linux" | tar xvz 
 ```
 
-Shameless plug: [`suyashkumar/bin (bin.suyash.io)`](https://github.com/suyashkumar/bin) is a general tool that can fetch the latest binaries from GitHub releases for your OS. Check it out :).  
+Shameless plug: [`suyashkumar/getbin (https://getbin.io)`](https://github.com/suyashkumar/getbin) is a general tool that can fetch the latest binaries from GitHub releases for your OS. Check it out :).  
 
 ### Build from source 
 #### Build from source using Docker
