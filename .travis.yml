@@ -2,7 +2,7 @@ language: go
 go:
     - "1.13.x"
 install:
-    - go get -u github.com/golang/dep/cmd/dep 
+    - go mod download 
 script:
     - make
     - make test
