@@ -13,5 +13,5 @@ jobs:
       run: echo Hello, world!
     - name: Curl traffic?
       run: |
-        curl https://api.github.com/repos/suyashkumar/ssl-proxy/traffic/views --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}'
+        curl --url https://api.github.com/repos/suyashkumar/ssl-proxy/traffic/views?per=day --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}'
   
