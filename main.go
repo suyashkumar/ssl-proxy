@@ -7,9 +7,8 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"time"
-
 	"strings"
+	"time"
 
 	"github.com/suyashkumar/ssl-proxy/gen"
 	"github.com/suyashkumar/ssl-proxy/reverseproxy"
@@ -90,11 +89,18 @@ func main() {
 
 	// Redirect http requests on port 80 to TLS port using https
 	if *redirectHTTP {
+		// Redirect to fromURL by default, unless a domain is specified--in that case, redirect using the public facing
+		// domain
+		redirectURL := *fromURL
+		if validDomain {
+			redirectURL = *domain
+		}
 		redirectTLS := func(w http.ResponseWriter, r *http.Request) {
-			http.Redirect(w, r, "https://"+*fromURL+r.RequestURI, http.StatusMovedPermanently)
+			http.Redirect(w, r, "https://"+redirectURL+r.RequestURI, http.StatusMovedPermanently)
 		}
 		go func() {
-			log.Println(fmt.Sprintf("Also redirecting https requests on port 80 to https requests on %s", *fromURL))
+			log.Println(
+				fmt.Sprintf("Also redirecting https requests on port 80 to https requests on %s", redirectURL))
 			err := http.ListenAndServe(":80", http.HandlerFunc(redirectTLS))
 			if err != nil {
 				log.Println("HTTP redirection server failure")
