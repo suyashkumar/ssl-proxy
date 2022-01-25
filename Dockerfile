@@ -1,6 +1,6 @@
-FROM golang:1.13.7-alpine3.11
+FROM golang:1.17.6-alpine3.15
 WORKDIR /go/src/github.com/suyashkumar/ssl-proxy
 RUN apk add --no-cache make git zip
-RUN go get -u github.com/golang/dep/cmd/dep
 COPY . .
+RUN go mod tidy -compat=1.17
 RUN make 
