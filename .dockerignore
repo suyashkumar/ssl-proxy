@@ -1,0 +1,10 @@
+.auth/
+build/
+dist/
+.gitignore
+docker-compose*
+Dockerfile
+*.pem
+release.sh
+test.sh
+upgrade-deps.sh

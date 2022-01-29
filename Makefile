@@ -20,8 +20,8 @@ run:
 	make build
 	./${BINARY}
 
-.PHONY: release
-release: 
+.PHONY: install
+install: 
 	go install
 	GOOS=linux GOARCH=amd64 go build -o build/${BINARY}-linux-amd64 .;
 	GOOS=darwin GOARCH=amd64 go build -o build/${BINARY}-darwin-amd64 .;
@@ -31,3 +31,8 @@ release:
 	tar -zcvf ${BINARY}-darwin-amd64.tar.gz ${BINARY}-darwin-amd64; \
 	zip -r ${BINARY}-windows-amd64.exe.zip ${BINARY}-windows-amd64.exe;
 
+.PHONY: release
+release: 
+	go install
+	./build/godownloader .godownloader.yaml > install-tailscale-ssl-proxy.sh
+	goreleaser release --rm-dist

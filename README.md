@@ -5,6 +5,10 @@
 
 A handy and simple way to add Tailscale SSL support to your locally running thing --be it your personal jupyter notebook, nodejs app or whatever. `tailscale-ssl-proxy` uses the official (Tailscale go package)[https://pkg.go.dev/tailscale.com] to get trusted LetsEncrypt SSL certs and then proxies HTTPS traffic to your existing HTTP server in a single command. `tailscale-ssl-proxy` also redirects unencrypted HTTP traffic on port 80 to HTTPS.
 
+## Installation
+
+curl -L https://github.com/eastlondoner/tailscale-ssl-proxy/releases/download/v0.0.1/install-tailscale-ssl-proxy.sh | sh -s -- latest
+
 ## Usage
 
 ### Simple

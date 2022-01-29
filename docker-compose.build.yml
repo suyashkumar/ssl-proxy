@@ -2,6 +2,7 @@ version: '2'
 services:
   build-release:
     build: .
+    environment:
+      - GITHUB_TOKEN
     volumes:
       - $PWD/:/go/src/github.com/eastlondoner/tailscale-ssl-proxy/
-    command: make release
