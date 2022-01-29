@@ -1,4 +1,10 @@
-BINARY = ssl-proxy
+BINARY = tailscale-ssl-proxy
+
+.PHONY: upgrade-deps
+upgrade-deps:
+	go mod tidy -compat=1.17
+	go get -u ./...
+	go get -t -u ./...
 
 .PHONY: build
 build:
@@ -21,7 +27,7 @@ release:
 	GOOS=darwin GOARCH=amd64 go build -o build/${BINARY}-darwin-amd64 .;
 	GOOS=windows GOARCH=amd64 go build -o build/${BINARY}-windows-amd64.exe .;
 	cd build; \
-	tar -zcvf ssl-proxy-linux-amd64.tar.gz ssl-proxy-linux-amd64; \
-	tar -zcvf ssl-proxy-darwin-amd64.tar.gz ssl-proxy-darwin-amd64; \
-	zip -r ssl-proxy-windows-amd64.exe.zip ssl-proxy-windows-amd64.exe;
+	tar -zcvf ${BINARY}-linux-amd64.tar.gz ${BINARY}-linux-amd64; \
+	tar -zcvf ${BINARY}-darwin-amd64.tar.gz ${BINARY}-darwin-amd64; \
+	zip -r ${BINARY}-windows-amd64.exe.zip ${BINARY}-windows-amd64.exe;
 

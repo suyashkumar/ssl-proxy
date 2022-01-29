@@ -1,7 +1,7 @@
 version: '2'
 services:
-  build-release:
+  test:
     build: .
     volumes:
       - $PWD/:/go/src/github.com/eastlondoner/tailscale-ssl-proxy/
-    command: make release
+    command: make test
