@@ -7,25 +7,56 @@ A handy and simple way to add Tailscale SSL support to your locally running thin
 
 ## Installation
 
-curl -L https://github.com/eastlondoner/tailscale-ssl-proxy/releases/download/v0.0.1/install-tailscale-ssl-proxy.sh | sh -s -- latest
+```sh
+curl -L https://github.com/eastlondoner/tailscale-ssl-proxy/releases/download/latest/install-tailscale-ssl-proxy.sh | sh -s
+```
 
-## Usage
+## Quickstart
 
-### Simple
 ```sh
 tailscale-ssl-proxy
+# Proxying calls from https://:443 (SSL/TLS) to http://localhost:8080
 ```
 This will immediately fetch, real LetsEncrypt certificates for the machine's Tailscale address.
 
-### Specify the 
+## Usage
+
+Print usage using the `-help` option
+
 ```sh
-tailscale-ssl-proxy -from 0.0.0.0:4430 -to 127.0.0.1:8000
+tailscale-ssl-proxy -help
 ```
-This will immediately generate self-signed certificates and begin proxying HTTPS traffic from https://0.0.0.0:4430 to http://127.0.0.1:8080. No need to ever call openssl. It will print the SHA256 fingerprint of the cert being used for you to perform manual certificate verification in the browser if you would like (before you "trust" the cert).
 
-I know `nginx` is often used for stuff like this, but I got tired of dealing with the boilerplate and wanted to explore something fun. So I ended up throwing this together. 
+```
+Usage of tailscale-ssl-proxy
+  -from string
+    	the tcp address and port this proxy should listen for requests on (default ":443")
+  -redirectHTTP string
+    	the tcp address and port this proxy should listen for http->https request redirects. Set to 'off' to disable http->https redirect (default ":80")
+  -to string
+    	the address and port for which to proxy requests to (default "http://localhost:8080")
+```
 
-### Redirect HTTP -> HTTPS
+### Examples
+
+#### Proxy to port 3000 (instead of 8080)
+
+```sh
+tailscale-ssl-proxy -to :3000
+```
+
+#### Disable HTTP -> HTTPS Redirect
+
+```sh
+tailscale-ssl-proxy -redirectHTTP off
+```
+Simply include the `-redirectHTTP` flag when running the program.
+
+#### Serve https on port 8443 (instaead of 443)
+
+```sh
+tailscale-ssl-proxy -from 0.0.0.0:8443
+```
 Simply include the `-redirectHTTP` flag when running the program.
 
 ### Build from source 
@@ -38,6 +69,7 @@ docker build . -t tailscale-ssl-proxy_build-release
 docker-compose -f docker-compose.build.yml up
 ```
 will build linux, osx, and darwin binaries (x86) and place them in a `build/` folder in your current working directory.
+
 #### Build from source locally
 You must have Golang installed on your system along with `make`. Then simply clone the repository and run `make`. 
 
