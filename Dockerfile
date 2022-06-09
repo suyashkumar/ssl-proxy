@@ -1,6 +1,7 @@
-FROM golang:1.13.7-alpine3.11
-WORKDIR /go/src/github.com/suyashkumar/ssl-proxy
+FROM golang:1.18.3-alpine3.16
 RUN apk add --no-cache make git zip
-RUN go get -u github.com/golang/dep/cmd/dep
+
+WORKDIR /go/src/github.com/suyashkumar/ssl-proxy
 COPY . .
+RUN go get -u github.com/golang/dep/cmd/dep
 RUN make 
