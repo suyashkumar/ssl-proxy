@@ -52,7 +52,7 @@ You can build `ssl-proxy` for all platforms quickly using the included Docker co
 
 If you have `docker-compose` installed:
 ```sh
-docker-compose -f docker-compose.build.yml up
+docker-compose -f docker-compose.build.yml up --force-recreate --build
 ```
 will build linux, osx, and darwin binaries (x86) and place them in a `build/` folder in your current working directory.
 #### Build from source locally
