@@ -44,8 +44,8 @@ func newDirector(target *url.URL, ipFilter string, extraDirector func(*http.Requ
 				extraDirector(req)
 			}
 		} else {
-			// IPv6 black hole address
-			req.URL.Host = "[100::/64]"
+			// send to black hole
+			req.URL.Host = "127.0.0.1:0"
 			req.URL.Scheme = "http"
 		}
 	}
