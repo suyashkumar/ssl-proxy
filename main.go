@@ -22,6 +22,7 @@ var (
 	keyFile      = flag.String("key", "", "path to a private key file. If not provided, ssl-proxy will generate one for you in ~/.ssl-proxy/")
 	domain       = flag.String("domain", "", "domain to mint letsencrypt certificates for. Usage of this parameter implies acceptance of the LetsEncrypt terms of service.")
 	redirectHTTP = flag.Bool("redirectHTTP", false, "if true, redirects http requests from port 80 to https at your fromURL")
+	ipFilter     = flag.String("ipfilter", "", "source IP address to filter incoming requests on. If not provided allow all IP")
 )
 
 const (
@@ -81,7 +82,7 @@ func main() {
 	}
 
 	// Setup reverse proxy ServeMux
-	p := reverseproxy.Build(toURL)
+	p := reverseproxy.Build(toURL, *ipFilter)
 	mux := http.NewServeMux()
 	mux.Handle("/", p)
 
