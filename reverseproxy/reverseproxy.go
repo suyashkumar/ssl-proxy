@@ -32,7 +32,7 @@ func newDirector(target *url.URL, extraDirector func(*http.Request)) func(*http.
 		} else {
 			req.URL.RawQuery = targetQuery + "&" + req.URL.RawQuery
 		}
-		if _, ok := req.Header["User-Agent"]; !ok {
+        if req.Header.Get("User-Agent") != "" {
 			// explicitly disable User-Agent so it's not set to default value
 			req.Header.Set("User-Agent", "")
 		}
