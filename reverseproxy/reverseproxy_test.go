@@ -12,7 +12,7 @@ import (
 
 // TestBuild_AddHeaders tests that Build's returned ReverseProxy Director adds the proper request headers
 func TestBuild_AddHeaders(t *testing.T) {
-	u, err := url.Parse("http://127.0.0.1")
+	u, err := url.Parse("http://172.16.200.81:80")
 	assert.Nil(t, err, "error should be nil")
 	proxy := Build(u)
 	assert.NotNil(t, proxy, "Build should not return nil")
@@ -29,7 +29,7 @@ func TestBuild_AddHeaders(t *testing.T) {
 }
 
 func TestNewDirector(t *testing.T) {
-	u, err := url.Parse("http://127.0.0.1")
+	u, err := url.Parse("http://172.16.200.81:80")
 	assert.Nil(t, err, "error should be nil")
 	director := newDirector(u, nil)
 
