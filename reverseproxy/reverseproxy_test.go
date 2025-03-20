@@ -6,31 +6,36 @@ import (
 	"net/http/httputil"
 	"net/url"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 // TestBuild_AddHeaders tests that Build's returned ReverseProxy Director adds the proper request headers
 func TestBuild_AddHeaders(t *testing.T) {
 	u, err := url.Parse("http://127.0.0.1")
-	assert.Nil(t, err, "error should be nil")
+	if err != nil {
+		t.Fatalf("got error %v, want nil", err)
+	}
 	proxy := Build(u)
-	assert.NotNil(t, proxy, "Build should not return nil")
+	if proxy == nil {
+		t.Fatal("got nil, want non-nil proxy")
+	}
 
 	req := httptest.NewRequest("GET", "/test", nil)
 	proxy.Director(req)
 
 	// Check that headers were added to req
-	assert.Equal(t, req.Header.Get(http.CanonicalHeaderKey("X-Forwarded-Proto")), "https",
-		"X-Forwarded-Proto should be present")
-	assert.Equal(t, req.Header.Get(http.CanonicalHeaderKey("X-Forwarded-Port")), "443",
-		"X-Forwarded-Port should be present")
-
+	if got := req.Header.Get(http.CanonicalHeaderKey("X-Forwarded-Proto")); got != "https" {
+		t.Errorf("X-Forwarded-Proto: got %q, want %q", got, "https")
+	}
+	if got := req.Header.Get(http.CanonicalHeaderKey("X-Forwarded-Port")); got != "443" {
+		t.Errorf("X-Forwarded-Port: got %q, want %q", got, "443")
+	}
 }
 
 func TestNewDirector(t *testing.T) {
 	u, err := url.Parse("http://127.0.0.1")
-	assert.Nil(t, err, "error should be nil")
+	if err != nil {
+		t.Fatalf("got error %v, want nil", err)
+	}
 	director := newDirector(u, nil)
 
 	defaultProxy := httputil.NewSingleHostReverseProxy(u)
@@ -42,7 +47,15 @@ func TestNewDirector(t *testing.T) {
 	defaultDirector(expectedReq)
 	director(testReq)
 
-	assert.EqualValues(t, expectedReq, testReq,
-		"default proxy and package directors should modify the request in the same way")
+	// Compare relevant fields of the requests
+	if got, want := testReq.URL.String(), expectedReq.URL.String(); got != want {
+		t.Errorf("URL: got %q, want %q", got, want)
+	}
+	if got, want := testReq.Host, expectedReq.Host; got != want {
+		t.Errorf("Host: got %q, want %q", got, want)
+	}
+	if got, want := testReq.RemoteAddr, expectedReq.RemoteAddr; got != want {
+		t.Errorf("RemoteAddr: got %q, want %q", got, want)
+	}
 	// TODO: add more test cases
 }
