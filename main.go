@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"flag"
 	"fmt"
 	"log"
@@ -87,6 +88,30 @@ func main() {
 
 	log.Printf(green("Proxying calls from https://%s (SSL/TLS) to %s"), *fromURL, toURL)
 
+	// Configure TLS to reasonably secure defaults
+	tlsCfg := new(tls.Config)
+	tlsCfg.MinVersion = tls.VersionTLS12
+	// Limit cipher suites available as of go 1.13 
+	// - List according to crypto/tls constants - in reverse order (i.e. prefer stronger over weaker ciphers)
+	// - Filtered out: RC4, (3)DES, CBC suites
+	tlsCfg.CipherSuites = []uint16{
+		// TLS 1.3 cipher suites.
+		tls.TLS_CHACHA20_POLY1305_SHA256,
+		tls.TLS_AES_128_GCM_SHA256,
+		tls.TLS_AES_256_GCM_SHA384,
+
+		// TLS 1.0 - 1.2 cipher suites.
+		// tls.TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256, // not available as of go 1.13, activate later
+		tls.TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,
+		tls.TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,
+		tls.TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
+		tls.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+		tls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+		tls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+		tls.TLS_RSA_WITH_AES_256_GCM_SHA384,
+		tls.TLS_RSA_WITH_AES_128_GCM_SHA256,
+	}
+
 	// Redirect http requests on port 80 to TLS port using https
 	if *redirectHTTP {
 		// Redirect to fromURL by default, unless a domain is specified--in that case, redirect using the public facing
@@ -123,15 +148,25 @@ func main() {
 			Prompt:     autocert.AcceptTOS,
 			HostPolicy: autocert.HostWhitelist(*domain),
 		}
+		
+		t := m.TLSConfig()
+		t.MinVersion = tlsCfg.MinVersion
+		t.CipherSuites = tlsCfg.CipherSuites
+		
 		s := &http.Server{
 			Addr:      *fromURL,
-			TLSConfig: m.TLSConfig(),
+			TLSConfig: t,
 		}
 		s.Handler = mux
 		log.Fatal(s.ListenAndServeTLS("", ""))
 	} else {
 		// Domain is not provided, serve TLS using provided/generated certificate files
-		log.Fatal(http.ListenAndServeTLS(*fromURL, *certFile, *keyFile, mux))
+		s := &http.Server{
+			Addr: *fromURL,
+			Handler: mux,
+			TLSConfig: tlsCfg,
+		}
+		log.Fatal(s.ListenAndServeTLS(*certFile, *keyFile))
 	}
 
 }
