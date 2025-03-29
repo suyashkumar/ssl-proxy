@@ -16,11 +16,15 @@ import (
 )
 
 var (
-	to           = flag.String("to", "http://127.0.0.1:80", "the address and port for which to proxy requests to")
-	fromURL      = flag.String("from", "127.0.0.1:4430", "the tcp address and port this proxy should listen for requests on")
-	certFile     = flag.String("cert", "", "path to a tls certificate file. If not provided, ssl-proxy will generate one for you in ~/.ssl-proxy/")
-	keyFile      = flag.String("key", "", "path to a private key file. If not provided, ssl-proxy will generate one for you in ~/.ssl-proxy/")
-	domain       = flag.String("domain", "", "domain to mint letsencrypt certificates for. Usage of this parameter implies acceptance of the LetsEncrypt terms of service.")
+	to       = flag.String("to", "http://127.0.0.1:80", "the address and port for which to proxy requests to")
+	fromURL  = flag.String("from", "127.0.0.1:4430", "the tcp address and port this proxy should listen for requests on")
+	certFile = flag.String("cert", "", "path to a tls certificate file. If not provided, ssl-proxy will generate one for you in ~/.ssl-proxy/")
+	keyFile  = flag.String("key", "", "path to a private key file. If not provided, ssl-proxy will generate one for you in ~/.ssl-proxy/")
+	domain   = flag.String("domain", "", "domain to mint letsencrypt certificates for. Usage of this parameter implies acceptance of the LetsEncrypt terms of service.")
+	cn       = flag.String("cn", "", "Common name of generated certificate")
+	dns      = flag.String("dns", "", "DNS name for SAN attribute")
+	ip       = flag.String("ip", "", "IP address for SAN attribute")
+
 	redirectHTTP = flag.Bool("redirectHTTP", false, "if true, redirects http requests from port 80 to https at your fromURL")
 )
 
@@ -47,7 +51,7 @@ func main() {
 		log.Printf("No existing cert or key specified, generating some self-signed certs for use (%s, %s)\n", *certFile, *keyFile)
 
 		// Generate new keys
-		certBuf, keyBuf, fingerprint, err := gen.Keys(365 * 24 * time.Hour)
+		certBuf, keyBuf, fingerprint, err := gen.Keys(365*24*time.Hour, *cn, *dns, *ip)
 		if err != nil {
 			log.Fatal("Error generating default keys", err)
 		}
