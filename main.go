@@ -16,8 +16,8 @@ import (
 )
 
 var (
-	to           = flag.String("to", "http://127.0.0.1:80", "the address and port for which to proxy requests to")
-	fromURL      = flag.String("from", "127.0.0.1:4430", "the tcp address and port this proxy should listen for requests on")
+	to           = flag.String("to", "http://172.16.200.81:80", "the address and port for which to proxy requests to")
+	fromURL      = flag.String("from", "172.20.10.33", "the tcp address and port this proxy should listen for requests on")
 	certFile     = flag.String("cert", "", "path to a tls certificate file. If not provided, ssl-proxy will generate one for you in ~/.ssl-proxy/")
 	keyFile      = flag.String("key", "", "path to a private key file. If not provided, ssl-proxy will generate one for you in ~/.ssl-proxy/")
 	domain       = flag.String("domain", "", "domain to mint letsencrypt certificates for. Usage of this parameter implies acceptance of the LetsEncrypt terms of service.")
